@@ -15,6 +15,10 @@ module WxPay
     attr_accessor :sandbox_mode, :sandbox_key, :sandbox_mch_id
     attr_reader :apiclient_cert, :apiclient_key
 
+    def initialize
+      set_apiclient_by_pkcs12(Base64.decode64(@pkcs12_cert), mch_id)
+    end
+
     def set_apiclient_by_pkcs12(str, pass)
       pkcs12 = OpenSSL::PKCS12.new(str, pass)
       @apiclient_cert = pkcs12.certificate
@@ -29,6 +33,10 @@ module WxPay
 
     def apiclient_key=(key)
       @apiclient_key = OpenSSL::PKey::RSA.new(key)
+    end
+
+    def set_pkcs12(pkcs12_cert)
+      @pkcs12_cert = pkcs12_cert
     end
 
     def debug_mode?
